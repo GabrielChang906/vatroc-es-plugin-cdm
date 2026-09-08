@@ -1,0 +1,34 @@
+# RCTP separated parallel operations
+# One runway handles arrivals and the parallel runway handles departures
+# Keep these specific rules before the broader configurations below
+RCTP:A:05L:05R,23R,23L:D:05R:05L,23R,23L:*:30_20
+RCTP:A:23R:23L,05L,05R:D:23L:23R,05L,05R:*:30_20
+RCTP:A:05R:05L,23R,23L:D:05L:05R,23R,23L:*:30_20
+RCTP:A:23L:23R,05L,05R:D:23R:23L,05L,05R:*:30_20
+
+# RCTP mixed operations on one active runway
+RCTP:A:05L:05R,23R,23L:D:05L:05R,23R,23L:*:20_11
+RCTP:A:05R:05L,23R,23L:D:05R:05L,23R,23L:*:20_11
+RCTP:A:23R:05R,05L,23L:D:23R:05R,05L,23L:*:20_11
+RCTP:A:23L:05R,23R,05L:D:23L:05R,23R,05L:*:20_11
+
+# RCTP dual-runway dependent departure sequences
+RCTP:A:05L,05R:23L,23R:D:05L,05R:23L,23R:05L,05R:25_20
+RCTP:A:23L,23R:05L,05R:D:23L,23R:05L,05R:23L,23R:25_20
+
+# Single-runway airports
+# Reciprocal runway directions share the normal and LVO rate of 30_20
+RCSS:A:*:*:D:10,28:*:*:30_20
+RCKH:A:*:*:D:09,27:*:*:30_20
+RCMQ:A:*:*:D:36,18:*:*:30_20
+RCKU:A:*:*:D:36,18:*:*:30_20
+RCNN:A:*:*:D:36R,18L:*:*:30_20
+RCYU:A:*:*:D:03,21:*:*:30_20
+RCFN:A:*:*:D:04,22:*:*:30_20
+RCQC:A:*:*:D:02,20:*:*:30_20
+RCBS:A:*:*:D:06,24:*:*:30_20
+RCGI:A:*:*:D:17,35:*:*:30_20
+RCLY:A:*:*:D:13,31:*:*:30_20
+RCMT:A:*:*:D:03,21:*:*:30_20
+RCFG:A:*:*:D:03,21:*:*:30_20
+RCKW:A:*:*:D:14,32:*:*:30_20
