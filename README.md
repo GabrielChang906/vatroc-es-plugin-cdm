@@ -6,14 +6,17 @@
 
 ## 檔案
 
-本倉庫刻意維持簡單的根目錄結構：
+三個由 CDM 直接讀取的發布檔案維持在根目錄；CI 與檢查器放在支援目錄，不增加 raw URL 的路徑層級：
 
 ```text
 .
+├─ .github/workflows/validate-cdm-data.yml
 ├─ README.md
 ├─ rate.txt
+├─ scripts/validate_cdm_data.py
 ├─ taxizones.txt
-└─ sidInterval.txt
+├─ sidInterval.txt
+└─ tests/test_validate_cdm_data.py
 ```
 
 - `rate.txt`：各機場與跑道配置的基礎離場容量。
@@ -40,6 +43,26 @@ sector files 中的 `CDMconfig.xml` 直接讀取下列 raw URL：
 ```
 
 因此合併到 `main` 的內容會成為正式資料；修改前應先完成語法檢查，並在 EuroScope 測試環境驗證。
+
+## 自動檢查
+
+每次 push 與 pull request 都會由 GitHub Actions 執行資料驗證。檢查器涵蓋：
+
+- 三個發布檔案是否存在、可用 UTF-8 讀取，且每行欄位數與資料型別正確。
+- ICAO、跑道、SID point、容量、時間及座標的基本格式與有效範圍。
+- 重複規則、相同條件使用不同數值、跑道同時被要求與排除，以及無法命中的 Rate 規則。
+- SID 配對反向重複或間隔衝突。
+- Taxi-zone 四邊形的重複點、零面積、自相交及相同區域時間衝突。
+- SID 與 taxi-zone 跑道是否有對應的離場 Rate；這類跨檔案疑點只會提出警告，不會阻擋合併。
+
+檢查器不會把目前的容量、SID 分鐘數或 taxi time 寫死，因此調整營運數值本身不會造成失敗。只有格式無法解析或存在明確衝突時，CI 才會以錯誤結束；需要人工確認的項目以警告呈現。
+
+本機可用 Python 3.12 或相容版本執行相同檢查：
+
+```text
+python scripts/validate_cdm_data.py --no-annotations
+python -m unittest discover -s tests -v
+```
 
 ## 現行設定原則
 
