@@ -12,10 +12,12 @@
 .
 ├─ README.md
 ├─ rate.txt
+├─ taxizones.txt
 └─ sidInterval.txt
 ```
 
 - `rate.txt`：各機場與跑道配置的基礎離場容量。
+- `taxizones.txt`：指定機場及跑道的 taxi time 區域。
 - `sidInterval.txt`：特定 SID 組合所需的額外離場間隔。
 
 `CDM.dll`、`CDMconfig.xml`、插件原始碼與版本發布不放在本倉庫；插件本身由上游專案維護，VATROC 的本地部署則位於 [vatroc-es-sectorfiles](https://github.com/GabrielChang906/vatroc-es-sectorfiles)。
@@ -25,13 +27,16 @@
 sector files 中的 `CDMconfig.xml` 直接讀取下列 raw URL：
 
 - Rate：<https://raw.githubusercontent.com/GabrielChang906/vatroc-es-plugin-cdm/refs/heads/main/rate.txt>
+- Taxi zones：<https://raw.githubusercontent.com/GabrielChang906/vatroc-es-plugin-cdm/refs/heads/main/taxizones.txt>
 - SID interval：<https://raw.githubusercontent.com/GabrielChang906/vatroc-es-plugin-cdm/refs/heads/main/sidInterval.txt>
 
 對應設定如下：
 
 ```xml
 <Rates url="https://raw.githubusercontent.com/GabrielChang906/vatroc-es-plugin-cdm/refs/heads/main/rate.txt" />
+<Taxizones url="https://raw.githubusercontent.com/GabrielChang906/vatroc-es-plugin-cdm/refs/heads/main/taxizones.txt" />
 <sidInterval url="https://raw.githubusercontent.com/GabrielChang906/vatroc-es-plugin-cdm/refs/heads/main/sidInterval.txt" />
+<DefaultTaxiTime minutes="10" />
 ```
 
 因此合併到 `main` 的內容會成為正式資料；修改前應先完成語法檢查，並在 EuroScope 測試環境驗證。
@@ -55,13 +60,26 @@ sector files 中的 `CDMconfig.xml` 直接讀取下列 raw URL：
 
 這些 SID 間隔會與 `rate.txt` 的機場／跑道容量限制共同作用；實際 TTOT 取決於插件計算後最嚴格的限制。
 
+### taxizones.txt
+
+未命中 taxi zone 的航機使用 `CDMconfig.xml` 中的 10 分鐘預設值。以下四個機場使用指定時間：
+
+| 機場 | Taxi time |
+| --- | ---: |
+| RCTP | 20 分鐘 |
+| RCKH | 15 分鐘 |
+| RCSS | 12 分鐘 |
+| RCMQ | 20 分鐘 |
+
+CDM 的 taxi-zone 格式必須包含跑道與四角座標，因此每個機場的各跑道方向分別列出，但同一機場共用涵蓋完整機場地面的矩形與 taxi time。矩形範圍依 sector files 內的跑道及地面資料建立，並保留少量邊界裕度。
+
 ## 編輯注意事項
 
 - 每一行只放一條有效規則。
-- 註解使用以 `#` 開頭的獨立行，不要把註解接在規則尾端。
+- `rate.txt` 與 `sidInterval.txt` 的註解使用以 `#` 開頭的獨立行，不要把註解接在規則尾端；`taxizones.txt` 保持只有資料行。
 - 保留由具體到一般的規則順序。
 - 修改 SID 名稱或分組時，應同步核對現行 sector files 與航圖資料。
-- 發布前確認兩個 raw URL 均回傳純文字，而不是 GitHub HTML 頁面。
+- 發布前確認三個 raw URL 均回傳純文字，而不是 GitHub HTML 頁面。
 
 ## 更新與載入
 
