@@ -89,9 +89,9 @@ python -m unittest discover -s tests -v
 
 | 機場 | Taxi time |
 | --- | ---: |
-| RCTP | 20 分鐘 |
-| RCKH | 15 分鐘 |
-| RCSS | 12 分鐘 |
+| RCTP | 20 -> 15 min |
+| RCKH | 15 -> 12 min |
+| RCSS | 12 -> 10 min |
 | RCMQ | 20 分鐘 |
 
 CDM 的 taxi-zone 格式必須包含跑道與四角座標，因此每個機場的各跑道方向分別列出，但同一機場共用涵蓋完整機場地面的矩形與 taxi time。矩形範圍依 sector files 內的跑道及地面資料建立，並保留少量邊界裕度。
