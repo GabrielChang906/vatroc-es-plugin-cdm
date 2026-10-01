@@ -90,7 +90,7 @@ python -m unittest discover -s tests -v
 | 機場 | Taxi time |
 | --- | ---: |
 | RCTP | 15 分鐘 |
-| RCKH | 12 分鐘 |
+| RCKH | 15/10 分鐘 (RWY27/09) |
 | RCSS | 10 分鐘 |
 | RCMQ | 20 分鐘 |
 
